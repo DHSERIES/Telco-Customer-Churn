@@ -41,7 +41,7 @@ Traditional churn prediction only identifies customers who are likely to leave. 
                       Model Evaluation Metrics
                                 │
                                 ▼
-                     Churn Probability Prediction
+                     Churn Probability Prediction -> Fastapi api
                                 │
                                 ▼
                    Business Insights & Dashboard
@@ -90,7 +90,7 @@ EDA was used to identify the clearest churn patterns before modeling and turn ra
 The highest-risk churn profile is a **new customer on a month-to-month contract, paying relatively high monthly charges, with limited support/protection services**.
 ![Churn by Tenure](assets/Tenure_in_months.png)
 
-These EDA findings guide feature engineering around contract type, tenure, service adoption, billing behavior, and revenue-adjusted customer value.
+These EDA findings guide feature engineering around contract type, tenure, service adoption and billing behavior
 ---
 
 # 🤖 Machine Learning
@@ -156,10 +156,7 @@ Instead, this project uses transparent business value formulas based on availabl
 For short-term, next-quarter revenue at risk is estimated as:
 
 `Next Quarter Risk Value = Churn Probability × Monthly Charge × 3`
-
-For ranking, given similar with short-term function with 'Tenure in Months' to make ranking:
-
-`Ranking = Churn Probability × Monthly Charge × 3 x log(1 + Tenure in Months)`
+* More detail in streamlit app
 
 This makes the score easier to explain than using an unclear CLTV column.
 
@@ -219,16 +216,6 @@ assets/dashboard.png
 * Data Visualization
 * Dashboard Development
 * Business Analytics
-
----
-
-# ⭐ Project Highlights
-
-* End-to-end Data Science workflow
-* Business-oriented problem solving
-* Interactive analytics and visualization
-* Predictive Machine Learning model
-* Portfolio-ready implementation
 ---
 
 ## License

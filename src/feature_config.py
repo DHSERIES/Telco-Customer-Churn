@@ -20,6 +20,7 @@ CLEANED_CAT_COLS = ['Gender', 'Senior Citizen', 'Married', 'Dependents', 'City',
             'Online Security', 'Online Backup', 'Device Protection Plan', 
             'Premium Tech Support', 'Streaming TV', 'Streaming Movies', 'Streaming Music', 
             'Unlimited Data', 'Contract', 'Paperless Billing', 'Payment Method','Zip Code']
+
 # -----------------------------
 # FEATURE ENGINEERING COLUMNS
 # -----------------------------
