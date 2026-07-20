@@ -180,18 +180,15 @@ Run Streamlit application
 streamlit streamlit_app.py
 ```
 or run server with Fastapi
+
 ```bash
 python main.py
 ```
 ---
 
-# 📷 Screenshots
-
 ## Dashboard
 
-```text
-assets/dashboard.png
-```
+![dashboard](assets/dashboard.png)
 ---
 
 # 🔮 More Improvements
