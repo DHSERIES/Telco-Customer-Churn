@@ -194,8 +194,8 @@ python main.py
 # 🔮 More Improvements
 
 * Hyperparameter optimization across models
-* features important combine with Recursive feature elimination 
-* ensemble models and neuron network model include
+* Stacking models for prediction improvement
+* Neuron network model include
 * mlflow tracking
 * Cloud deployment
 * CI/CD pipeline
