@@ -177,7 +177,7 @@ pip install -r requirements.txt
 Run Streamlit application
 
 ```bash
-streamlit streamlit_app.py
+streamlit run streamlit_app.py
 ```
 or run server with Fastapi
 
