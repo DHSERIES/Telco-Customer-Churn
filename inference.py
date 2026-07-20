@@ -1,57 +1,113 @@
 import joblib
 import pandas as pd
-from sklearn.preprocessing import OrdinalEncoder, TargetEncoder
 
-# -----------------------------
-# Feature configuration
-# -----------------------------
-NUM_COLS = [
-    'Age','Number of Dependents','Zip Code','Latitude',
-    'Longitude','Population','Number of Referrals',
-    'Tenure in Months','Avg Monthly Long Distance Charges',
-    'Avg Monthly GB Download','Monthly Charge',
-    'Total Charges','Total Refunds',
-    'Total Extra Data Charges',
-    'Total Long Distance Charges',
-    'Total Revenue'
-]
+from src.encoder_ import create_feature_engineering, TransformFeatureEncoder
+from src.feature_config import CLEANED_CAT_COLS, CLEANED_NUM_COLS
 
-CAT_COLS = [
-    'Gender','Under 30','Senior Citizen','Married',
-    'Dependents','City','Referred a Friend',
-    'Offer','Phone Service','Multiple Lines',
-    'Internet Service','Internet Type',
-    'Online Security','Online Backup',
-    'Device Protection Plan',
-    'Premium Tech Support',
-    'Streaming TV','Streaming Movies',
-    'Streaming Music','Unlimited Data',
-    'Contract','Paperless Billing',
-    'Payment Method'
-]
 
-obj = joblib.load("model/xgb_model.pkl")
-model, encoder, FEATURES = obj["model"], obj["encoder"], obj["FEATURES"]
+MODEL_PATH = "model/churn_model.joblib"
+FEATURES = CLEANED_CAT_COLS + CLEANED_NUM_COLS
 
-def transform_new_data(new_df, encoder):
-    X = new_df.copy()
 
-    for col in CAT_COLS:
-        oe = encoder[f"oe_{col}"]
-        X[f"oe_{col}"] = oe.transform(X[[col]])
+def load_deployment_bundle(
+    model_path: str = MODEL_PATH,
+) -> dict:
+    bundle = joblib.load(model_path)
 
-    for col in CAT_COLS:
-        te = encoder[f"te_{col}"]
-        X[f"te_{col}"] = te.transform(X[[col]])
+    required_keys = {
+        "model",
+        "encoders",
+        "feature_names",
+        "lat_center",
+        "lon_center",
+    }
 
-    return X[FEATURES]
-def predict(data):
+    missing_keys = required_keys - set(bundle)
 
-    df = pd.DataFrame([data])
-    assert all(col in df.columns for col in NUM_COLS + CAT_COLS), "Missing required columns"
+    if missing_keys:
+        raise ValueError(
+            f"Deployment bundle is missing keys: {sorted(missing_keys)}"
+        )
+
+    return bundle
+
+
+def predict_new_data(
+    new_data: pd.DataFrame,
+    model_path: str = MODEL_PATH,
+) -> pd.DataFrame:
+    """
+    Predict churn for new raw customer data.
+
+    new_data must contain the original cleaned input columns:
+        CLEANED_CAT_COLS + CLEANED_NUM_COLS
+    """
+    if not isinstance(new_data, pd.DataFrame):
+        raise TypeError("new_data must be a pandas DataFrame.")
+
+    if new_data.empty:
+        raise ValueError("new_data is empty.")
+
+    duplicate_columns = new_data.columns[
+        new_data.columns.duplicated()
+    ].tolist()
+
+    if duplicate_columns:
+        raise ValueError(
+            f"Duplicate columns found: {duplicate_columns}"
+        )
+
+    missing_columns = set(FEATURES) - set(new_data.columns)
+
+    if missing_columns:
+        raise ValueError(
+            "New data is missing required raw columns: "
+            f"{sorted(missing_columns)}"
+        )
     
-    X = df[NUM_COLS + CAT_COLS]
-    X = transform_new_data(X, encoder)
-    pred = model.predict(X)
+    bundle = load_deployment_bundle(model_path)
 
-    return pred
+    model = bundle["model"]
+    encoders = bundle["encoders"]
+    selected_features = bundle["feature_names"]
+    lat_center = bundle["lat_center"]
+    lon_center = bundle["lon_center"]
+
+    # Deployment accept only the cleaned columns.
+    X_new = new_data[FEATURES].copy()
+
+    # Step 1: create the same engineered features used in training.
+    X_new_fe, _, _ = create_feature_engineering(
+        X_new,
+        lat_center=lat_center,
+        lon_center=lon_center,
+    )
+
+    # Step 2: apply the encoders fitted during training.
+    X_new_encoded = TransformFeatureEncoder(
+        X_new_fe,
+        encoders,
+    )
+
+    missing_model_features = (
+        set(selected_features) - set(X_new_encoded.columns)
+    )
+
+    if missing_model_features:
+        raise ValueError(
+            "Prediction data is missing model features: "
+            f"{sorted(missing_model_features)}"
+        )
+
+    # Preserve the exact training feature order.
+    X_model = X_new_encoded[selected_features].copy()
+
+    predictions = model.predict_proba(X_model)
+
+    result = new_data.copy()
+    reverse_mappings = {0: "No", 1: "Yes"}
+    result["Churn Prediction"] = predictions[:, 1]
+    result["Yes_probability"] = predictions[:, 1]
+    result["No_probability"] = predictions[:, 0]
+    return result
+

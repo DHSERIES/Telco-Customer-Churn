@@ -1,41 +1,22 @@
-# 📊 Telco Customer Churn Prediction
+# 📊 Telco Customer Churn Prediction for Profit-Driven Retention
 
-### End-to-End Machine Learning Project for Predicting Customer Churn in the Telecommunications Industry
+### End-to-End Machine Learning System for Churn Risk Scoring, Revenue Loss Estimation, and Retention Prioritization
 
-
-**Using data-driven insights to identify customers at risk of churn and support business retention strategies.**
+Using data-driven insights to identify customers at risk of churn, estimate potential business impact, and support targeted retention strategies.
 
 ---
 
 # 📌 Project Overview
 
-Customer churn is one of the most significant challenges for subscription-based businesses. Losing existing customers directly impacts revenue, while acquiring new customers often costs substantially more.
+Customer churn is a major business problem for telecom companies because losing customers directly reduces recurring revenue. This project builds an end-to-end machine learning system to predict customer churn risk, estimate potential revenue loss, and prioritize high-value customers for retention campaigns.
 
-This project develops a complete Machine Learning pipeline that:
-
-* Cleans and preprocesses customer data
-* Explores behavioral patterns through visual analytics
-* Trains predictive models
-* Evaluates model performance
-* Predicts whether a customer is likely to churn
-* Provides actionable business insights
-
-The goal is not only to build a predictive model but also to demonstrate an end-to-end Data Science workflow from raw data to business decision-making.
+So instead of only predicting whether a customer will churn, the project focuses on converting model predictions into business decisions. The final output includes churn probability scores, expected revenue loss, customer risk segments, and retention priority recommendations.
 
 ---
 
 # 🎯 Business Problem
 
-**Question**
-
-> Which customers are most likely to leave the telecom service?
-
-**Business Objective**
-
-* Reduce customer attrition
-* Improve retention campaigns
-* Optimize marketing resources
-* Increase customer lifetime value
+Traditional churn prediction only identifies customers who are likely to leave. However, businesses also need to know which customers should be prioritized, how much revenue is at risk, and what retention actions may be appropriate. This project addresses that gap by combining churn prediction with revenue-based prioritization.
 
 ---
 
@@ -48,13 +29,13 @@ The goal is not only to build a predictive model but also to demonstrate an end-
                      Data Cleaning & Validation
                                 │
                                 ▼
-                  Feature Engineering & Encoding
-                                │
-                                ▼
                   Exploratory Data Analysis (EDA)
                                 │
                                 ▼
-                     Machine Learning Models
+                  Feature Engineering & Encoding
+                                │
+                                ▼
+                         Training Models
                                 │
                                 ▼
                       Model Evaluation Metrics
@@ -69,220 +50,125 @@ The goal is not only to build a predictive model but also to demonstrate an end-
 ---
 
 # 📂 Dataset
-The project uses the **IBM Telco Customer Churn Dataset**, containing over **7,000 customer records**.
 
-# data source:
-IBM Telco Customer Churn (11.1.3+) sample dataset, distributed via Kaggle mirror by Al Fath Terry (or Jack Chang).
+This project uses the **IBM Telco Customer Churn Dataset**, a public sample dataset commonly used for customer churn analysis and machine learning classification tasks.
 
-## Features
-### 👤 Demographic Information
-Customer demographic characteristics and household composition.
+The dataset contains customer demographic information, account details, subscribed services, billing information, geographic attributes, and churn-related labels.
 
-Gender,Age,Senior Citizen,Married,Dependents,Number of Dependents
-### 📍 Geographic Information
-Customer location and regional attributes.
+## Dataset Size
 
-City,Zip Code,Latitude,Longitude,Population
-### 🤝 Customer Acquisition & Referrals
-Information related to customer acquisition channels and referral programs.
+- **Records:** 7,000+ customer records
+- **Features:** 50+ columns
+- **Target:** `Churn Label`
+- **Task:** Binary classification — predict whether a customer is likely to churn
+- **Data quality:** Includes missing values and categorical variables that require preprocessing
 
-Referred a Friend,Number of Referrals,Offer
-### 📄 Account Information
-Core account and subscription details.
+## Feature Details
 
-Tenure in Months,Contract,Payment Method,Paperless Billing
-### ☎️ Phone Services
-Customer phone service subscriptions and associated charges.
+The full feature description is available in:
 
-Phone Service,Multiple Lines,Avg Monthly Long Distance Charges,Total Long Distance Charges
-### 🌐 Internet Services
-Internet connectivity and value-added service features.
-
-Internet Service,Internet Type,Online Security,Online Backup,Device Protection Plan,Premium Tech Support,Unlimited Data
-### 🎬 Entertainment Services
-Streaming and media-related subscriptions.
-
-Streaming TV,Streaming Movies,Streaming Music
-### 📊 Usage Metrics
-Customer service consumption and usage patterns.
-
-Avg Monthly GB Download
-### 💰 Billing & Revenue
-Customer billing history, charges, refunds, and revenue contribution.
-
-Monthly Charge,Total Charges,Total Refunds,Total Extra Data Charges,Total Revenue
-
-### 🎯 Target Variable
-Churn Label
-
-# ⚙ Tech Stack
-
-| Category         | Technologies          
-| ---------------- | --------------------- 
-| Language         | Python                
-| Data Analysis    | Pandas, NumPy         
-| Visualization    | Matplotlib, Plotly    
-| Machine Learning | Scikit-learn, XGBoost,LightBGM, CatBoost
-| Development      | Jupyter Notebook      
-
----
-
-# 🔬 Data Science Workflow
-
-```text
-            Raw Data
-                │
-                ▼
-           Data Cleaning
-                │
-                ▼
-       Missing Value Handling
-                │
-                ▼
-          Feature Encoding
-                │
-                ▼
-        Exploratory Analysis
-                │
-                ▼
-           Model Training
-                │
-                ▼
-       Performance Evaluation
-                │
-                ▼
-            Prediction
-```
-
----
+[`asset/feature_detail.md`](asset/feature_detail.md)
 
 # 📊 Exploratory Data Analysis
 
-The analysis investigates several business questions:
+EDA was used to identify the clearest churn patterns before modeling and turn raw data into business hypotheses.
+* hypothesis can be wrong so only show clearest trend to show clearer path on train model
 
-* Which customers churn the most?
-* Does contract type influence retention?
-* Does tenure reduce churn probability?
-* How do monthly charges affect churn?
-* Which services increase customer loyalty?
+## Key Insights
 
-Example visualizations:
+* **Churn is not evenly distributed** — retained customers are the majority, so model evaluation should not rely on accuracy alone. Recall, F1 score, ROC-AUC, and confusion matrix are more useful for churn detection.
+* **Month-to-month contracts are the highest-risk segment** — customers without long-term commitment churn much more often than customers on one-year or two-year contracts.
+* **additional service decrease churn**  — customers with services like **Online Security**, **Online Backup**, **Device Protection Plan**, or **Premium Tech Support** show lower churn, suggesting these services improve customer retention.
+* **Revenue features are tenure-driven** — total charges and total revenue are strongly connected to tenure, so they should be interpreted with tenure-adjusted features rather than alone.
 
-```
-assets/
-│
-├── churn_distribution.png
-├── tenure_analysis.png
-├── contract_type.png
-├── monthly_charges.png
-└── correlation_heatmap.png
-```
+## Business Takeaway
 
-> Replace these placeholders with screenshots from your project for a stronger portfolio presentation.
+The highest-risk churn profile is a **new customer on a month-to-month contract, paying relatively high monthly charges, with limited support/protection services**.
 
+These EDA findings guide feature engineering around contract type, tenure, service adoption, billing behavior, and revenue-adjusted customer value.
+
+Key churn patterns found during EDA:
+
+![Churn Distribution](assets/churn_distribution.png)
+
+![Churn by Contract Type](assets/contract_method.png)
+
+![Churn by Tenure](assets/Tenure_in_months.png)
+
+![Churn by Payment Method](assets/Payment_method.png)
 ---
 
 # 🤖 Machine Learning
 
 ## Data Preprocessing
+The dataset was cleaned before model training to reduce leakage and prepare features.
 
-* Missing value handling
-* Categorical encoding
-* Feature engineering
-* Train/Test split
+* Target mapping: Converted Churn Label into binary values: No = 0, Yes = 1.
+* Missing values: Filled missing Offer values with "None" and missing Internet Type values with "No_Internet_Service".
+* Data type format: Created Internet_Service_detail from Internet Type and converted Zip Code to categorical string format.
+* Dropped unused columns: Removed Customer ID, Under 30, Country, State, and Quarter.
+* Dropped leakage columns: Removed Churn Score, CLTV, Churn Category, and Churn Reason,
+* Update dropped leak columns :remove Customer Status and Satisfaction Score
+
+![Customer Status leak](assets/customer_stats_leak.png)
+![Satisfaction Score leak](assets/satisfy_score_leak.png)
 
 ---
-
 ## Models
+### Baseline
+* LogisticRegression
+* Support Vector Machine (SVM),
+* Random Forest
+* KNN
+* XGBoost 
+* CatBoost
+* LightBGM
 
-* Support Vector Machine (SVM)
-* XGBoost
-* Additional baseline models (if applicable)
-
+### Deployment
+* lgbm
 ---
 
 ## Evaluation Metrics
-
 * Accuracy
 * Precision
 * Recall
 * F1 Score
 * ROC-AUC
-* Confusion Matrix
+
+### Focusing metric:
+* ROC-AUC
 
 ---
 
-# 📈 Results
+## 📈 Results
 
-| Metric    | Score  |
-| --------- | ------ |
-| Accuracy  | XX.XX% |
-| Precision | XX.XX% |
-| Recall    | XX.XX% |
-| F1 Score  | XX.XX  |
-| ROC-AUC   | XX.XX  |
+### short version:
+| model           |   test_roc_auc |
+|:----------------|---------------:|
+| lgbm            |       0.925924 |
+| catboost        |       0.923392 |
+| xgb             |       0.922713 |
+| linear_logistic |       0.918177 |
+| svm_linear      |       0.916125 |
+| random_forest   |       0.913288 |
 
-> Replace the placeholder values above with your actual evaluation metrics.
+### full version:
 
+![Result table](assets/result_tab.csv)
 ---
+### Business Value Estimation
 
-# 🎯 Example Prediction
+`CLTV` is not used because its calculation is not clearly defined in the dataset.
+Instead, this project uses transparent business value formulas based on available columns.
+For short-term, next-quarter revenue at risk is estimated as:
 
-## Customer Profile
+`Next Quarter Risk Value = Churn Probability × Monthly Charge × 3`
 
-| Feature          | Value          |
-| ---------------- | -------------- |
-| Contract         | Month-to-month |
-| Tenure           | 4 Months       |
-| Internet Service | Fiber Optic    |
-| Monthly Charges  | $85            |
-| Tech Support     | No             |
+For ranking, given similar with short-term function with 'Tenure in Months' to make ranking:
 
-↓
+`Ranking = Churn Probability × Monthly Charge × 3 x log(1 + Tenure in Months)`
 
-```text
-Prediction Result
-
-Risk Score
-
-████████████░░ 82%
-
-Classification
-
-⚠ Likely to Churn
-```
-
----
-
-# 💼 Business Impact
-
-The model can support decision-making by helping businesses:
-
-* Identify high-risk customers
-* Launch targeted retention campaigns
-* Reduce customer acquisition costs
-* Increase long-term profitability
-* Improve customer satisfaction
-
----
-
-# 📁 Repository Structure
-
-```text
-Telco-Customer-Churn/
-
-├── data/
-├── notebooks/
-├── src/
-├── assets/
-│
-├── app.py
-├── requirements.txt
-├── README.md
-└── LICENSE
-```
-
----
+This makes the score easier to explain than using an unclear CLTV column.
 
 # 🚀 Installation
 
@@ -313,29 +199,14 @@ python app.py
 ```text
 assets/dashboard.png
 ```
-
-## Model Performance
-
-```text
-assets/model_results.png
-```
-
-## Exploratory Analysis
-
-```text
-assets/eda_overview.png
-```
-
-> Add actual screenshots to the `assets/` folder and update the README to display them using Markdown images.
-
 ---
 
-# 🔮 Future Improvements
+# 🔮 Potential Improvements
 
 * Hyperparameter optimization
-* SHAP/LIME explainability
-* REST API deployment
-* Docker containerization
+* Recursive feature elimination with cross-validation
+* ensemble models and neuron network model include
+* mlflow tracking
 * Cloud deployment
 * CI/CD pipeline
 * Automated model retraining
@@ -363,7 +234,6 @@ assets/eda_overview.png
 * Interactive analytics and visualization
 * Predictive Machine Learning model
 * Portfolio-ready implementation
-
 ---
 
 ## License
