@@ -4,6 +4,34 @@
 
 Using data-driven insights to identify customers at risk of churn, estimate potential business impact, and support targeted retention strategies.
 
+# 🚀 Installation
+
+Clone the repository
+
+```bash
+git clone https://github.com/DHSERIES/Telco-Customer-Churn.git
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Run Streamlit application
+
+```bash
+streamlit run streamlit_app.py
+```
+or run server with Fastapi
+
+```bash
+python main.py
+```
+## Dashboard
+
+![dashboard](assets/dashboard.png)
+
 ---
 
 # 📌 Project Overview
@@ -160,35 +188,6 @@ For short-term, next-quarter revenue at risk is estimated as:
 
 This makes the score easier to explain than using an unclear CLTV column.
 
-# 🚀 Installation
-
-Clone the repository
-
-```bash
-git clone https://github.com/DHSERIES/Telco-Customer-Churn.git
-```
-
-Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-Run Streamlit application
-
-```bash
-streamlit run streamlit_app.py
-```
-or run server with Fastapi
-
-```bash
-python main.py
-```
----
-
-## Dashboard
-
-![dashboard](assets/dashboard.png)
 ---
 
 # 🔮 More Improvements
