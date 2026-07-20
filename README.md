@@ -77,25 +77,20 @@ EDA was used to identify the clearest churn patterns before modeling and turn ra
 ## Key Insights
 
 * **Churn is not evenly distributed** — retained customers are the majority, so model evaluation should not rely on accuracy alone. Recall, F1 score, ROC-AUC, and confusion matrix are more useful for churn detection.
+![Churn Distribution](assets/churn_distribution.png)
+
 * **Month-to-month contracts are the highest-risk segment** — customers without long-term commitment churn much more often than customers on one-year or two-year contracts.
+![Churn by Contract Type](assets/contract_method.png)
+
 * **additional service decrease churn**  — customers with services like **Online Security**, **Online Backup**, **Device Protection Plan**, or **Premium Tech Support** show lower churn, suggesting these services improve customer retention.
 * **Revenue features are tenure-driven** — total charges and total revenue are strongly connected to tenure, so they should be interpreted with tenure-adjusted features rather than alone.
 
 ## Business Takeaway
 
 The highest-risk churn profile is a **new customer on a month-to-month contract, paying relatively high monthly charges, with limited support/protection services**.
-
-These EDA findings guide feature engineering around contract type, tenure, service adoption, billing behavior, and revenue-adjusted customer value.
-
-Key churn patterns found during EDA:
-
-![Churn Distribution](assets/churn_distribution.png)
-
-![Churn by Contract Type](assets/contract_method.png)
-
 ![Churn by Tenure](assets/Tenure_in_months.png)
 
-![Churn by Payment Method](assets/Payment_method.png)
+These EDA findings guide feature engineering around contract type, tenure, service adoption, billing behavior, and revenue-adjusted customer value.
 ---
 
 # 🤖 Machine Learning
@@ -104,7 +99,6 @@ Key churn patterns found during EDA:
 The dataset was cleaned before model training to reduce leakage and prepare features.
 
 * Target mapping: Converted Churn Label into binary values: No = 0, Yes = 1.
-* Missing values: Filled missing Offer values with "None" and missing Internet Type values with "No_Internet_Service".
 * Data type format: Created Internet_Service_detail from Internet Type and converted Zip Code to categorical string format.
 * Dropped unused columns: Removed Customer ID, Under 30, Country, State, and Quarter.
 * Dropped leakage columns: Removed Churn Score, CLTV, Churn Category, and Churn Reason,
@@ -135,11 +129,10 @@ The dataset was cleaned before model training to reduce leakage and prepare feat
 * F1 Score
 * ROC-AUC
 
-### Focusing metric:
-* ROC-AUC
+### Primary metric:
+* ROC-AUC, because it evaluates model performance across classification thresholds and is less affected by class imbalance than accuracy.
 
 ---
-
 ## 📈 Results
 
 ### short version:
@@ -184,12 +177,15 @@ Install dependencies
 pip install -r requirements.txt
 ```
 
-Run the application
+Run Streamlit application
 
 ```bash
-python app.py
+streamlit streamlit_app.py
 ```
-
+or run server with Fastapi
+```bash
+python main.py
+```
 ---
 
 # 📷 Screenshots
@@ -201,16 +197,15 @@ assets/dashboard.png
 ```
 ---
 
-# 🔮 Potential Improvements
+# 🔮 More Improvements
 
-* Hyperparameter optimization
-* Recursive feature elimination with cross-validation
+* Hyperparameter optimization across models
+* features important combine with Recursive feature elimination 
 * ensemble models and neuron network model include
 * mlflow tracking
 * Cloud deployment
 * CI/CD pipeline
 * Automated model retraining
-
 ---
 
 # 🧠 Skills Demonstrated
